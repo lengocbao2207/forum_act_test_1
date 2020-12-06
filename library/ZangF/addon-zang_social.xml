@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="zang_social" title="[Bcat95] Ảnh bài viết" version_string="1.0" version_id="1" url="" install_callback_class="ZangF_Install" install_callback_method="install" uninstall_callback_class="ZangF_Install" uninstall_callback_method="uninstall">
+  <admin_navigation/>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates/>
+  <admin_template_modifications>
+    <modification template="tools_rebuild" modification_key="tools_rebuild" description="tools_rebuild" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[</xen:if>]]></find>
+      <replace><![CDATA[</xen:if>
+<xen:form action="{xen:adminlink 'tools/cache-rebuild'}">
+<h2 class="subHeading">{xen:phrase zang_rebuild_thread_thumb}</h2>
+	<xen:spinboxunit name="options[batch]" value="100" step="50" min="1" label="{xen:phrase items_to_process_per_page}:" />
+
+	<xen:submitunit save="{xen:phrase rebuild_now}" />
+	<input type="hidden" name="cache" value="ZangF_CacheRebuilder_Thumb" />
+</xen:form>]]></replace>
+    </modification>
+  </admin_template_modifications>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="ZangF_Listener" callback_method="init_dependencies" active="1" hint="" description=""/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="ZangF_Listener" callback_method="controller" active="1" hint="" description="Thêm nút rebuild thread thumb trong tools"/>
+    <listener event_id="load_class_datawriter" execute_order="10" callback_class="ZangF_Listener" callback_method="datawriter" active="1" hint="" description=""/>
+    <listener event_id="load_class_model" execute_order="10" callback_class="ZangF_Listener" callback_method="model" active="1" hint="" description=""/>
+    <listener event_id="template_hook" execute_order="10" callback_class="ZangF_Listener" callback_method="hook" active="1" hint="" description=""/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups>
+    <group group_id="ZangF" display_order="1" debug_only="0"/>
+    <option option_id="z_min_size" edit_format="spinbox" data_type="unsigned_integer" can_backup="1">
+      <default_value>120</default_value>
+      <edit_format_params>step=10
+min=40</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="ZangF" display_order="3"/>
+    </option>
+    <option option_id="z_no_image" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value></default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="ZangF" display_order="1"/>
+    </option>
+    <option option_id="z_type_thumb" edit_format="textbox" data_type="string" can_backup="1">
+      <default_value>2,3</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="ZangF" display_order="2"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="custom_bb_code_color_desc" version_id="1" version_string="1.0"><![CDATA[COLOR]]></phrase>
+    <phrase title="custom_bb_code_color_title" version_id="1" version_string="1.0"><![CDATA[COLOR]]></phrase>
+    <phrase title="custom_bb_code_font_desc" version_id="1" version_string="1.0"><![CDATA[FONT]]></phrase>
+    <phrase title="custom_bb_code_font_title" version_id="1" version_string="1.0"><![CDATA[FONT]]></phrase>
+    <phrase title="custom_bb_code_size_desc" version_id="1" version_string="1.0"><![CDATA[Size]]></phrase>
+    <phrase title="custom_bb_code_size_title" version_id="1" version_string="1.0"><![CDATA[Size]]></phrase>
+    <phrase title="edit_title_and_more" version_id="1" version_string="1.0"><![CDATA[Sửa thông tin chủ đề]]></phrase>
+    <phrase title="option_group_ZangF" version_id="1" version_string="1.0"><![CDATA[[Bcat95] - xenFace - XenForo to Facebook]]></phrase>
+    <phrase title="option_group_ZangF_description" version_id="1" version_string="1.0"><![CDATA[]]></phrase>
+    <phrase title="option_z_min_size" version_id="1" version_string="1.0"><![CDATA[Min size of thumb image]]></phrase>
+    <phrase title="option_z_min_size_explain" version_id="1" version_string="1.0"><![CDATA[With and height of thumb image must be bigger this option.]]></phrase>
+    <phrase title="option_z_no_image" version_id="1" version_string="1.0"><![CDATA[Link to no_image]]></phrase>
+    <phrase title="option_z_no_image_explain" version_id="1" version_string="1.0"><![CDATA[Ex: http://localhost/images/no_image.jpg]]></phrase>
+    <phrase title="option_z_type_thumb" version_id="1" version_string="1.0"><![CDATA[List type of thumb]]></phrase>
+    <phrase title="option_z_type_thumb_explain" version_id="1" version_string="1.0"><![CDATA[[IMAGETYPE_GIF] => 1<br>
+[IMAGETYPE_JPEG] => 2<br>
+[IMAGETYPE_PNG] => 3<br>
+[IMAGETYPE_SWF] => 4<br>
+...etc...]]></phrase>
+    <phrase title="price" version_id="1" version_string="1.0"><![CDATA[Giá (nghìn đồng)]]></phrase>
+    <phrase title="zang_detail" version_id="1" version_string="1.0"><![CDATA[Chi tiết]]></phrase>
+    <phrase title="zang_rebuild_thread_thumb" version_id="1" version_string="1.0"><![CDATA[Cập nhật thumb cho chủ đề]]></phrase>
+    <phrase title="zang_thumb" version_id="1" version_string="1.0"><![CDATA[Hình đại diện]]></phrase>
+    <phrase title="zang_thumb_rebuild_success" version_id="1" version_string="1.0"><![CDATA[Cập nhật thumb cho chủ đề thành công]]></phrase>
+    <phrase title="zang_view_more_comments" version_id="1" version_string="1.0"><![CDATA[Xem thêm các bình luận]]></phrase>
+    <phrase title="zang_welcome" version_id="1" version_string="1.0"><![CDATA[Chào mừng bạn]]></phrase>
+    <phrase title="z_thumb_input_placeholder" version_id="1" version_string="1.0"><![CDATA[Link ảnh đại diện cho bài viết]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates>
+    <template title="zang_news_feed.css" version_id="1" version_string="1.0"><![CDATA[.bbCodeImage{
+	max-width: 33%!important;
+	max-height: 200px!important;
+	margin-right: 10px;
+	margin-bottom: 10px;
+	display: block;
+	float: left;
+}
+.content{
+	font-size: 13px;
+}
+
+.more_button {
+	color: #00bc9e!important; 
+	border: none!important; 
+	cursor: pointer;
+}
+.feed_detail{
+	display: none;
+}
+.NewsFeedItem a{
+	color: #00bc9e!important; 
+}
+.list_likes{
+	margin-top: 10px;
+	background-color:#F1F1F1;
+	position:relative;
+	padding: 2px;
+}
+.list_likes:after{
+	content:"";
+	width:0;
+	height:0;
+	position:absolute;
+	border:4px solid transparent;
+	border-bottom: 5px solid #F1F1F1;
+	top: -8px;
+	left: 10px;
+}
+
+.z_thumb{
+	max-height: 200px;
+	overflow: hidden;
+	float: left;
+	margin-right: 20px;
+}
+.z_thumb_img{
+	display: block;
+	margin: 0 auto;
+	border: 3px solid #DDD;
+}
+.content_box{
+	display: block;
+	overflow: auto;
+}]]></template>
+    <template title="zang_thread_create" version_id="1" version_string="1.0"><![CDATA[]]></template>
+  </templates>
+  <public_template_modifications>
+    <modification template="thread_view" modification_key="ogimage" description="ogimage" execution_order="10" enabled="1" action="str_replace">
+      <find><![CDATA[<xen:set var="$avatar">{xen:helper avatar, $thread, m, 0, 1}</xen:set>]]></find>
+      <replace><![CDATA[<xen:set var="$avatar">{xen:helper avatar, $thread, m, 0, 1}</xen:set>
+<xen:set var="$z_thumb">{$thread.z_thumb}</xen:set>]]></replace>
+    </modification>
+  </public_template_modifications>
+  <bb_code_media_sites/>
+  <bb_codes/>
+</addon>

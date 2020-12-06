@@ -1,0 +1,1 @@
+<?phpclass Kid_Route_Prefix implements XenForo_Route_Interface{	public function match($routePath, Zend_Controller_Request_Http $request, XenForo_Router $router)	{		return $router->getRouteMatch('Kid_ControllerPublic_Main', $routePath);	}}

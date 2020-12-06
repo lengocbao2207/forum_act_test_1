@@ -1,0 +1,534 @@
+<?xml version="1.0" encoding="utf-8"?>
+<addon addon_id="NodesAsTabs" title="Nodes As Tabs" version_string="1.2.2" version_id="102020" url="http://xenforo.com/community/resources/nodes-as-tabs.9/" install_callback_class="NodesAsTabs_Install" install_callback_method="install" uninstall_callback_class="NodesAsTabs_Install" uninstall_callback_method="uninstall">
+  <admin_navigation>
+    <navigation navigation_id="nodesAsTabsOptions" parent_navigation_id="options" display_order="20" link="options/list/nodesAsTabs" admin_permission_id="option" debug_only="0" hide_no_children="0"/>
+  </admin_navigation>
+  <admin_permissions/>
+  <admin_style_properties/>
+  <admin_templates>
+    <template title="nat_admin_css.css"><![CDATA[fieldset.natOptionsField
+{
+	border: 1px solid {xen:property primaryLighter};
+	border-radius: 5px;
+}
+
+div.natOptionsHeader
+{
+	background-color: {xen:property primaryLighterStill};
+	padding: 5px;
+	border-bottom: 1px solid {xen:property primaryLighter};
+}
+
+span.natNodeListTabLabel
+{
+	color: {xen:property contentText};
+	background-color: {xen:property primaryLighterStill};
+	padding: 2px 4px;
+	border: 1px solid {xen:property primaryLighter};
+	border-radius: 3px;
+}
+
+p.natimportantMessage
+{
+	font-style: normal;
+}
+
+p.natimportantMessage a
+{
+	font-weight: bold;
+	text-decoration: underline;
+	color: {xen:property secondaryDarker};
+}]]></template>
+    <template title="nat_nodeoptions"><![CDATA[<xen:if is="{$natOptions}">
+
+
+
+<script>
+function natTabToggle()
+{
+	if(document.getElementById('ctrl_nat_display_tab_1').checked)
+	{
+		document.getElementById('natTabOptionsWrap').style.opacity='1';
+		document.getElementById('natManualWrap').style.opacity='0.5';
+	}
+	else
+	{
+		document.getElementById('natTabOptionsWrap').style.opacity='0.5';
+		document.getElementById('natManualWrap').style.opacity='1';
+	}
+}
+
+function natTabOptionsEnable()
+{
+	document.getElementById('ctrl_nat_display_tab_1').checked='checked';
+	document.getElementById('natTabOptionsWrap').style.opacity='1';
+	document.getElementById('natManualWrap').style.opacity='0.5';
+}
+
+function natManualEnable()
+{
+	document.getElementById('ctrl_nat_display_tab_1').checked='';
+	document.getElementById('natTabOptionsWrap').style.opacity='0.5';
+	document.getElementById('natManualWrap').style.opacity='1';
+}
+</script>
+
+<fieldset class="natOptionsField">
+
+<div class="natOptionsHeader">
+	{xen:phrase nat_node_edit_header_title}
+	
+	<span style="float: right;">
+		<a href="admin.php?options/list/nodesAsTabs">{xen:phrase nat_node_edit_header_additional}</a>
+	</span>
+</div>
+
+<div onClick="natTabToggle();">
+	<xen:checkboxunit label="{xen:phrase nat_create_new_tab}:">
+		<xen:option name="nat_display_tab" label="{xen:phrase nat_display_as_tab}" selected="{$natOptions.nat_display_tab}" />
+		<xen:explain>{xen:phrase nat_displays_node_as_tab}</xen:explain>
+	</xen:checkboxunit>
+</div>
+<div id="natTabOptionsWrap" onClick="natTabOptionsEnable();" onSelect="natTabOptionsEnable();" style="opacity: {xen:if '{$natOptions.nat_display_tab}', '1', '0.5'};">
+	<xen:checkboxunit label="">
+		<xen:option name="nat_display_tabperms" label="{xen:phrase nat_check_node_perms}" selected="{$natOptions.nat_display_tabperms}" />
+		<xen:explain>{xen:phrase nat_checks_node_perms}</xen:explain>
+	</xen:checkboxunit>
+	<xen:textboxunit name="nat_tabtitle" value="{$natOptions.nat_tabtitle}" label="{xen:phrase nat_tabtitle}:" placeholder="{xen:if {$natOptions.title}, {$natOptions.title}, {xen:phrase nat_tabtitle_default}}">
+		<xen:explain>{xen:phrase nat_tabtitle_optional}</xen:explain>
+	</xen:textboxunit>
+	<xen:textboxunit name="nat_display_order" value="{$natOptions.nat_display_order}" label="{xen:phrase nat_tab_display_order}:">
+		<xen:explain>{xen:phrase nat_the_display_order_of_this_tab_amongst_other_nodes}</xen:explain>
+	</xen:textboxunit>
+	<xen:selectunit name="nat_position" value="{$natOptions.nat_position}" label="{xen:phrase nat_tab_position}:">
+		<xen:option value="home">{xen:phrase nat_position_home}</xen:option>
+		<xen:option value="middle">{xen:phrase nat_position_middle}</xen:option>
+		<xen:option value="end">{xen:phrase nat_position_end}</xen:option>
+		<xen:explain>{xen:phrase nat_three_tab_positions}</xen:explain>
+	</xen:selectunit>
+	<xen:textboxunit name="nat_childlinks" value="{xen:if '{$natOptions.nat_childlinks}', '{$natOptions.nat_childlinks}', '0'}" label="{xen:phrase nat_children_as_links}:">
+		<xen:explain>{xen:phrase nat_displays_children_as_links}</xen:explain>
+	</xen:textboxunit>
+	<xen:checkboxunit label="">
+		<xen:option name="nat_childlinksperms" label="{xen:phrase nat_children_as_links_perms}" selected="{$natOptions.nat_childlinksperms}" />
+		<xen:explain>{xen:phrase nat_checks_child_perms}</xen:explain>
+	</xen:checkboxunit>
+	<xen:checkboxunit label="{xen:phrase nat_unread_count}:">
+		<xen:option name="nat_unreadcount" label="{xen:phrase nat_unread_count}" selected="{$natOptions.nat_unreadcount}" />
+		<xen:explain>{xen:phrase nat_unread_count_explain}</xen:explain>
+	</xen:checkboxunit>
+	<xen:checkboxunit label="{xen:phrase nat_mark_read_link}:">
+		<xen:option name="nat_markread" label="{xen:phrase nat_add_mark_read_link}" selected="{$natOptions.nat_markread}" />
+		<xen:explain>{xen:phrase nat_mark_read_link_explain}</xen:explain>
+	</xen:checkboxunit>
+	<xen:textboxunit name="nat_linkstemplate" value="{$natOptions.nat_linkstemplate}" label="{xen:phrase nat_linkstemplate}:" placeholder="nat_linkstemplate">
+		<xen:explain>{xen:phrase nat_linkstemplate_optional}</xen:explain>
+	</xen:textboxunit>
+	<xen:checkboxunit label="{xen:phrase nat_enable_popup}:">
+		<xen:option name="nat_popup" label="{xen:phrase nat_enable_popup}" selected="{$natOptions.nat_popup}" />
+		<xen:explain>{xen:phrase nat_enable_popup_explain}</xen:explain>
+	</xen:checkboxunit>
+	<xen:checkboxunit label="">
+		<xen:option name="nat_popup_columns" label="{xen:phrase nat_enable_popup_columns}" selected="{$natOptions.nat_popup_columns}" />
+		<xen:explain>{xen:phrase nat_enable_popup_columns_explain}</xen:explain>
+	</xen:checkboxunit>
+</div>
+</fieldset>
+
+<fieldset class="natOptionsField">
+
+<div class="natOptionsHeader">
+	{xen:phrase nat_node_edit_header_title}
+	
+	<span style="float: right;">
+		<a href="admin.php?options/list/nodesAsTabs">{xen:phrase nat_node_edit_header_additional}</a>
+	</span>
+</div>
+
+<div id="natManualWrap" onClick="natManualEnable();" onSelect="natManualEnable();" style="opacity: {xen:if '({$natOptions.nat_tabid} AND !{$natOptions.nat_display_tab}) OR (!{$natOptions.nat_tabid} AND !{$natOptions.nat_display_tab})', '1', '0.5'};">
+	<xen:textboxunit name="nat_tabid" value="{$natOptions.nat_tabid}" label="{xen:phrase nat_tabid}:{xen:phrase nat_tabid_extra}" placeholder="{xen:phrase nat_tabid_default}">
+		<xen:explain>{xen:phrase nat_tabid_explain}</xen:explain>
+	</xen:textboxunit>
+</div>
+</fieldset>
+
+
+
+</xen:if>]]></template>
+    <template title="nat_node_list_warning"><![CDATA[<p class="importantMessage">
+	{xen:phrase nat_category_tab_link_problem, 'linkhref={xen:adminlink 'options/list/nodeList'}', 'linkname={xen:phrase option_categoryOwnPage}'}
+</p>
+
+<xen:include template="node_list" />]]></template>
+  </admin_templates>
+  <admin_template_modifications>
+    <modification template="node_list" modification_key="natnodeListTabLabels" description="Adds &quot;tab&quot; labels to the node list.  Uses labels that are defined by listener." execution_order="10" enabled="1" action="preg_replace">
+      <find><![CDATA[/snippet="(.+)"/siU]]></find>
+      <replace><![CDATA[snippet="$1{xen:raw {$node.nat_tab_label}}"]]></replace>
+    </modification>
+  </admin_template_modifications>
+  <code_events/>
+  <code_event_listeners>
+    <listener event_id="container_public_params" execute_order="10" callback_class="NodesAsTabs_Listen" callback_method="containerExtra" active="1" hint="" description="Adds container params to extraTabs."/>
+    <listener event_id="front_controller_pre_dispatch" execute_order="10" callback_class="NodesAsTabs_Listen" callback_method="linkForumSelect" active="1" hint="" description="Enables tab selection for link-forum tabs."/>
+    <listener event_id="front_controller_pre_view" execute_order="10" callback_class="NodesAsTabs_Listen" callback_method="linkForumTabId" active="1" hint="" description="Sets container param for tab ID in the case of a link-forum.  Normally done in controller."/>
+    <listener event_id="init_dependencies" execute_order="10" callback_class="NodesAsTabs_Listen" callback_method="enableAPI" active="1" hint="" description="Sets flag to enable API for this addon."/>
+    <listener event_id="load_class_controller" execute_order="10" callback_class="NodesAsTabs_Listen" callback_method="extendControllers" active="1" hint="" description="Extends the relevant front and backend controllers."/>
+    <listener event_id="load_class_view" execute_order="10" callback_class="NodesAsTabs_Listen" callback_method="extendViewAdmin" active="1" hint="" description="Adds &quot;tab&quot; labels to the node list."/>
+    <listener event_id="navigation_tabs" execute_order="2147483647" callback_class="NodesAsTabs_NavTabs" callback_method="createNodeTabs" active="1" hint="" description="Creates nav tabs for nodes."/>
+    <listener event_id="template_create" execute_order="10" callback_class="NodesAsTabs_Listen" callback_method="categoryWarning" active="1" hint="node_list" description="Warns the admin about the existence of category tabs when the &quot;Create Pages for Categories&quot; setting is disabled."/>
+    <listener event_id="template_create" execute_order="10" callback_class="NodesAsTabs_Listen" callback_method="includeCSS" active="1" hint="PAGE_CONTAINER" description="Includes CSS for this addon."/>
+    <listener event_id="template_hook" execute_order="10" callback_class="NodesAsTabs_Listen" callback_method="bodyJS" active="1" hint="page_container_js_body" description="Adds js to body to make changes for column secondary links."/>
+    <listener event_id="template_hook" execute_order="20" callback_class="NodesAsTabs_Listen" callback_method="nodeOptions" active="1" hint="admin_page_edit_basic_information" description="Adds configurable options to nodes so you can set them as tabs. (page node)"/>
+    <listener event_id="template_hook" execute_order="20" callback_class="NodesAsTabs_Listen" callback_method="nodeOptions" active="1" hint="forum_edit_basic_information" description="Adds configurable options to nodes so you can set them as tabs. (forum node)"/>
+    <listener event_id="template_hook" execute_order="20" callback_class="NodesAsTabs_Listen" callback_method="nodeOptions" active="1" hint="admin_category_edit" description="Adds configurable options to nodes so you can set them as tabs. (category node)"/>
+    <listener event_id="template_hook" execute_order="20" callback_class="NodesAsTabs_Listen" callback_method="nodeOptions" active="1" hint="admin_link_forum_edit" description="Adds configurable options to nodes so you can set them as tabs. (link-forum node)"/>
+    <listener event_id="template_post_render" execute_order="0" callback_class="NodesAsTabs_Listen" callback_method="breadCrumbs" active="1" hint="PAGE_CONTAINER" description="Roots breadcrumbs to node tabs."/>
+  </code_event_listeners>
+  <cron/>
+  <email_templates/>
+  <email_template_modifications/>
+  <optiongroups>
+    <group group_id="nodesAsTabs" display_order="9999" debug_only="0"/>
+    <option option_id="natforceEnd" edit_format="radio" data_type="integer" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params>1={xen:phrase nat_option_first}
+0={xen:phrase nat_option_last}</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="nodesAsTabs" display_order="6"/>
+    </option>
+    <option option_id="natforceHome" edit_format="radio" data_type="integer" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params>1={xen:phrase nat_option_first}
+0={xen:phrase nat_option_last}</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="nodesAsTabs" display_order="4"/>
+    </option>
+    <option option_id="natforceMiddle" edit_format="radio" data_type="integer" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params>1={xen:phrase nat_option_first}
+0={xen:phrase nat_option_last}</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="nodesAsTabs" display_order="5"/>
+    </option>
+    <option option_id="natlinkForumSelect" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="nodesAsTabs" display_order="1"/>
+    </option>
+    <option option_id="natrootNode" edit_format="callback" data_type="integer" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params>NodesAsTabs_Option_RootNodeChooser::renderSelect</edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="nodesAsTabs" display_order="2"/>
+    </option>
+    <option option_id="natrootNodeSelect" edit_format="onoff" data_type="boolean" can_backup="1">
+      <default_value>0</default_value>
+      <edit_format_params></edit_format_params>
+      <sub_options></sub_options>
+      <relation group_id="nodesAsTabs" display_order="3"/>
+    </option>
+  </optiongroups>
+  <permissions>
+    <permission_groups/>
+    <permissions/>
+    <interface_groups/>
+  </permissions>
+  <phrases>
+    <phrase title="admin_navigation_nodesAsTabsOptions" version_id="101030" version_string="1.1.3"><![CDATA[Nodes As Tabs]]></phrase>
+    <phrase title="nat_add_mark_read_link" version_id="101000" version_string="1.1.0"><![CDATA[Add "Mark Read" Link]]></phrase>
+    <phrase title="nat_assigned_to" version_id="101023" version_string="1.1.2c"><![CDATA[assigned to]]></phrase>
+    <phrase title="nat_category_tab_link_problem" version_id="101040" version_string="1.1.4"><![CDATA[You have a top level category tab which requires you to enable <a style="font-weight: bold; text-decoration: underline; color: #6d3f03;" href="{linkhref}">{linkname}</a> or the tab will not work.  If you don't want to enable this setting then an alternative is to change your node tree so the category tab is not a top level node.  The problem only exists for category nodes at 0 depth (top level).]]></phrase>
+    <phrase title="nat_checks_child_perms" version_id="101020" version_string="1.1.2"><![CDATA[The link will not be shown if the user is not allowed to view the child node.  Enabling this option will add one query to every page.]]></phrase>
+    <phrase title="nat_checks_node_perms" version_id="101020" version_string="1.1.2"><![CDATA[The tab will not be shown if the user is not allowed to view the node.  Enabling this option will add one query to every page.]]></phrase>
+    <phrase title="nat_check_node_perms" version_id="0" version_string=""><![CDATA[Check Node Permissions]]></phrase>
+    <phrase title="nat_children_as_links" version_id="101030" version_string="1.1.3"><![CDATA[Depth Of Child Links]]></phrase>
+    <phrase title="nat_children_as_links_perms" version_id="0" version_string=""><![CDATA[Check Child Permissions]]></phrase>
+    <phrase title="nat_create_new_tab" version_id="101023" version_string="1.1.2c"><![CDATA[Create New Tab]]></phrase>
+    <phrase title="nat_displays_children_as_links" version_id="101030" version_string="1.1.3"><![CDATA[Depth of child nodes to display as secondary links underneath the tab.  These secondary links also double as a popup menu for the tab if you check <b>Enable Popup Menu</b> below.  0 = disable.  1 = first children only.  2+ will create a tree in the popup and will use sub-menus to handle the depth of secondary links.]]></phrase>
+    <phrase title="nat_displays_node_as_tab" version_id="0" version_string=""><![CDATA[This node will appear as a tab in the navbar.]]></phrase>
+    <phrase title="nat_display_as_tab" version_id="0" version_string=""><![CDATA[Display As Tab]]></phrase>
+    <phrase title="nat_enable_popup" version_id="101000" version_string="1.1.0"><![CDATA[Enable Popup Menu]]></phrase>
+    <phrase title="nat_enable_popup_columns" version_id="102010" version_string="1.2.1"><![CDATA[Popup Links As Columns]]></phrase>
+    <phrase title="nat_enable_popup_columns_explain" version_id="102020" version_string="1.2.2"><![CDATA[Enable this option to organize popup menu links as columns grouped by the highest level children.  This can be a superior presentation for long lists of multi-level children that are well-balanced across a few parent nodes.  See the bottom of the <b>nat_public_css.css</b> template for special CSS to help you style your column menus.]]></phrase>
+    <phrase title="nat_enable_popup_explain" version_id="101030" version_string="1.1.3"><![CDATA[If your tab has secondary links (i.e. you have enabled <b>Depth Of Child Links</b> or you have specified a <b>Links Template</b>) then you can choose to enable the popup menu which will show those secondary links as a popup when the tab is not selected.  Otherwise the secondary links will only be available underneath this tab after you have entered the tab.]]></phrase>
+    <phrase title="nat_end_tab" version_id="101023" version_string="1.1.2c"><![CDATA[end tab]]></phrase>
+    <phrase title="nat_home_tab" version_id="101023" version_string="1.1.2c"><![CDATA[home tab]]></phrase>
+    <phrase title="nat_linkstemplate" version_id="0" version_string=""><![CDATA[Links Template]]></phrase>
+    <phrase title="nat_linkstemplate_optional" version_id="101020" version_string="1.1.2"><![CDATA[Optional.  It is only needed if you wish to define your own secondary links.  Enter the name of the template here.  Refer to the default <b>nat_linkstemplate</b> in building your own template.  You may use the same code and variables in your template.]]></phrase>
+    <phrase title="nat_mark_read_link" version_id="101000" version_string="1.1.0"><![CDATA["Mark Read" Link]]></phrase>
+    <phrase title="nat_mark_read_link_explain" version_id="101000" version_string="1.1.0"><![CDATA[The default "Forums" tab has a "Mark Forums Read" link which allows you to mark read the current forum or all forums.  Enabling this option will add the same link under this tab.  You will likely only want to enable this for tabs containing forum nodes.]]></phrase>
+    <phrase title="nat_mark_tab_read" version_id="110" version_string="1.1.0"><![CDATA[Mark Tab Read]]></phrase>
+    <phrase title="nat_middle_tab" version_id="101023" version_string="1.1.2c"><![CDATA[middle tab]]></phrase>
+    <phrase title="nat_node_edit_header_additional" version_id="101040" version_string="1.1.4"><![CDATA[[Additional Options]]]></phrase>
+    <phrase title="nat_node_edit_header_title" version_id="101040" version_string="1.1.4"><![CDATA[Add-on: Nodes As Tabs]]></phrase>
+    <phrase title="nat_option_first" version_id="101023" version_string="1.1.2c"><![CDATA[First]]></phrase>
+    <phrase title="nat_option_last" version_id="101023" version_string="1.1.2c"><![CDATA[Last]]></phrase>
+    <phrase title="nat_position_end" version_id="0" version_string=""><![CDATA[End]]></phrase>
+    <phrase title="nat_position_home" version_id="0" version_string=""><![CDATA[Home]]></phrase>
+    <phrase title="nat_position_middle" version_id="0" version_string=""><![CDATA[Middle]]></phrase>
+    <phrase title="nat_root_node" version_id="101040" version_string="1.1.4"><![CDATA[Root Node]]></phrase>
+    <phrase title="nat_tabid" version_id="101040" version_string="1.1.4"><![CDATA[Assign To Existing Tab]]></phrase>
+    <phrase title="nat_tabid_default" version_id="101023" version_string="1.1.2c"><![CDATA[&lt;enter a tab ID&gt;]]></phrase>
+    <phrase title="nat_tabid_explain" version_id="101030" version_string="1.1.3"><![CDATA[This setting can be used to manually assign this node (and its children) to an existing tab ID.  Tab IDs of navigation tabs can be seen in the HTML source:<br /><br />
+
+&lt;li class="navTab <b>members</b> Popup PopupControl PopupClosed"&gt;<br /><br />
+
+This only controls the tab selection.  It will not automatically add a link to the specified tab, nor do you get any of the above options like when you create a new tab.  The link must be added to the tab manually (usually a template edit).]]></phrase>
+    <phrase title="nat_tabid_extra" version_id="101040" version_string="1.1.4"><![CDATA[<br />
+<span style="font-size: 11px;">(for tab selection only)</span>]]></phrase>
+    <phrase title="nat_tabtitle" version_id="101022" version_string="1.1.2b"><![CDATA[Tab Title]]></phrase>
+    <phrase title="nat_tabtitle_default" version_id="101022" version_string="1.1.2b"><![CDATA[&lt;defaults to node title&gt;]]></phrase>
+    <phrase title="nat_tabtitle_optional" version_id="101022" version_string="1.1.2b"><![CDATA[Optional.  The tab title will be the title of the node unless you override it here.  This allows you to name the tab something different than the node itself.]]></phrase>
+    <phrase title="nat_tab_display_order" version_id="0" version_string=""><![CDATA[Tab Display Order]]></phrase>
+    <phrase title="nat_tab_position" version_id="0" version_string=""><![CDATA[Tab Position]]></phrase>
+    <phrase title="nat_the_display_order_of_this_tab_amongst_other_nodes" version_id="0" version_string=""><![CDATA[The display order of this tab amongst other nodes that are also displayed as tabs.]]></phrase>
+    <phrase title="nat_three_tab_positions" version_id="0" version_string=""><![CDATA[There are three tab positions: home, middle, and end.  The position, in addition to the display order, determines where in the navbar the tab is shown.]]></phrase>
+    <phrase title="nat_unread_count" version_id="101030" version_string="1.1.3"><![CDATA[Unread Count]]></phrase>
+    <phrase title="nat_unread_count_explain" version_id="101030" version_string="1.1.3"><![CDATA[Display unread counter bubble just like the "alerts" menu.  This only works for logged in users, not guests.  Enabling this option will add one query to every page (for logged in users).]]></phrase>
+    <phrase title="option_group_nodesAsTabs" version_id="101020" version_string="1.1.2"><![CDATA[Nodes As Tabs]]></phrase>
+    <phrase title="option_group_nodesAsTabs_description" version_id="102010" version_string="1.2.1"><![CDATA[<p class="importantMessage natimportantMessage">
+	To manage your nodes go to <a href="admin.php?applications/">Applications</a>.  The tab options are inline when adding/editing a node.
+</p>]]></phrase>
+    <phrase title="option_natforceEnd" version_id="101020" version_string="1.1.2"><![CDATA[Force Order - End Position]]></phrase>
+    <phrase title="option_natforceEnd_explain" version_id="101020" version_string="1.1.2"><![CDATA[When you have multiple addons installed they can sometimes fight for position in the navbar.  This option allows you to force an order for node tabs within the "End" position.]]></phrase>
+    <phrase title="option_natforceHome" version_id="101020" version_string="1.1.2"><![CDATA[Force Order - Home Position]]></phrase>
+    <phrase title="option_natforceHome_explain" version_id="101020" version_string="1.1.2"><![CDATA[When you have multiple addons installed they can sometimes fight for position in the navbar.  This option allows you to force an order for node tabs within the "Home" position.]]></phrase>
+    <phrase title="option_natforceMiddle" version_id="101020" version_string="1.1.2"><![CDATA[Force Order - Middle Position]]></phrase>
+    <phrase title="option_natforceMiddle_explain" version_id="101020" version_string="1.1.2"><![CDATA[When you have multiple addons installed they can sometimes fight for position in the navbar.  This option allows you to force an order for node tabs within the "Middle" position.]]></phrase>
+    <phrase title="option_natlinkForumSelect" version_id="101023" version_string="1.1.2c"><![CDATA[Enable Tab Selection For Link-forums]]></phrase>
+    <phrase title="option_natlinkForumSelect_explain" version_id="101030" version_string="1.1.3"><![CDATA[The target of the link-forum must be a relative location to support tab selection (e.g. <b>members/</b> or <b>index.php?members/</b>).  It uses relative URI matching.  This works well in many situations but not always.]]></phrase>
+    <phrase title="option_natrootNode" version_id="101040" version_string="1.1.4"><![CDATA[Define Root Node]]></phrase>
+    <phrase title="option_natrootNodeSelect" version_id="101040" version_string="1.1.4"><![CDATA[Enable Tab Selection For Root Node]]></phrase>
+    <phrase title="option_natrootNodeSelect_explain" version_id="101040" version_string="1.1.4"><![CDATA[Node tabs always support tab selection, but for the root node this might not be desirable.  For example, you might want a root node that functions solely as a popup menu to quickly access the node tree.  When a tab becomes selected that popup menu is no longer accessible.]]></phrase>
+    <phrase title="option_natrootNode_explain" version_id="101040" version_string="1.1.4"><![CDATA[You must first enable <b>Display As Tab</b> for a node before you can select it here.  Functionally this makes it so the selected node is treated as a parent of all nodes for the purpose of creating a new tab with this addon.  The most obvious application is to create a root tab with a sufficient <b>Depth Of Child Links</b> to display the entire node tree in the popup menu.]]></phrase>
+  </phrases>
+  <route_prefixes/>
+  <style_properties/>
+  <templates>
+    <template title="nat_bodyjs" version_id="102010" version_string="1.2.1"><![CDATA[<xen:foreach loop="$nodeTabs" value="$nodeTab">
+<xen:if is="{$nodeTab.nat_popup_columns}">
+	$('.Menu.JsOnly.tabMenu.nodetab{$nodeTab.node_id}TabLinks').addClass('natJSMenuColumns');
+</xen:if>
+</xen:foreach>
+]]></template>
+    <template title="nat_childlinks" version_id="102020" version_string="1.2.2"><![CDATA[<xen:if is="{$selected}">
+
+
+
+<xen:foreach loop="$firstChildNodes" value="$node">
+
+<xen:if is="{$node.submenu}">
+<li class="Popup PopupControl PopupClosed">
+	<a href="{xen:link {$nodeTypes.{$node.node_type_id}.public_route_prefix}, $node}" rel="Menu">{$node.title}</a>
+	<div class="Menu JsOnly tabMenu">
+		<ul class="secondaryContent blockLinksList">
+			<xen:foreach loop="$node.submenu" value="$subNode">
+			<xen:set var="$depth">{xen:calc '({$subNode.level} - 2)'}</xen:set>
+			<li class="natMenuLevel{$depth}">
+				<xen:if is="{$nodeTypes.{$subNode.node_type_id}.public_route_prefix}">
+					<a href="{xen:link {$nodeTypes.{$subNode.node_type_id}.public_route_prefix}, $subNode}">{$subNode.title}</a>
+				</xen:if>
+			</li>
+			</xen:foreach>
+		</ul>
+	</div>
+</li>
+<xen:elseif is="{$node.level} == 1" />
+<li>
+	<xen:if is="{$nodeTypes.{$node.node_type_id}.public_route_prefix}">
+		<a href="{xen:link {$nodeTypes.{$node.node_type_id}.public_route_prefix}, $node}">{$node.title}</a>
+	</xen:if>
+</li>
+</xen:if>
+
+</xen:foreach>
+
+
+
+<xen:elseif is="{$nodeTab.nat_popup_columns}" />
+
+
+
+<xen:foreach loop="$firstChildNodes" value="$node">
+
+<xen:if is="{$node.submenu}">
+<xen:if is="{$beyondFirst}">
+	</ul>
+	<ul class="secondaryContent blockLinksList">
+</xen:if>
+<xen:set var="$depth">{xen:calc '({$node.level} - 1)'}</xen:set>
+<li class="natMenuLevel{$depth}">
+	<xen:if is="{$nodeTypes.{$node.node_type_id}.public_route_prefix}">
+		<a href="{xen:link {$nodeTypes.{$node.node_type_id}.public_route_prefix}, $node}">{$node.title}</a>
+	</xen:if>
+</li>
+<xen:foreach loop="$node.submenu" value="$subNode">
+<xen:set var="$depth">{xen:calc '({$subNode.level} - 1)'}</xen:set>
+<li class="natMenuLevel{$depth}">
+	<xen:if is="{$nodeTypes.{$subNode.node_type_id}.public_route_prefix}">
+		<a href="{xen:link {$nodeTypes.{$subNode.node_type_id}.public_route_prefix}, $subNode}">{$subNode.title}</a>
+	</xen:if>
+</li>
+</xen:foreach>
+<xen:set var="$beyondFirst">1</xen:set>
+<xen:elseif is="{$node.level} == 1" />
+<xen:if is="{$beyondFirst}">
+	</ul>
+	<ul class="secondaryContent blockLinksList">
+</xen:if>
+<xen:set var="$depth">{xen:calc '({$node.level} - 1)'}</xen:set>
+<li class="natMenuLevel{$depth}">
+	<xen:if is="{$nodeTypes.{$node.node_type_id}.public_route_prefix}">
+		<a href="{xen:link {$nodeTypes.{$node.node_type_id}.public_route_prefix}, $node}">{$node.title}</a>
+	</xen:if>
+</li>
+<xen:set var="$beyondFirst">1</xen:set>
+</xen:if>
+
+</xen:foreach>
+
+
+
+<xen:else />
+
+
+
+<xen:foreach loop="$firstChildNodes" value="$node">
+<xen:set var="$depth">{xen:calc '({$node.level} - 1)'}</xen:set>
+<li class="natMenuLevel{$depth}">
+	<xen:if is="{$nodeTypes.{$node.node_type_id}.public_route_prefix}">
+		<a href="{xen:link {$nodeTypes.{$node.node_type_id}.public_route_prefix}, $node}">{$node.title}</a>
+	</xen:if>
+</li>
+</xen:foreach>
+
+
+
+</xen:if>]]></template>
+    <template title="nat_linkstemplate" version_id="101023" version_string="1.1.2c"><![CDATA[<ul class="secondaryContent blockLinksList">
+	<xen:if is="{$nodeTab.nat_markread} AND {$visitor.user_id} AND {$selected}">
+	<li><a href="{xen:link 'forums/-/mark-read', $forum, 'date={$serverTime}'}" class="OverlayTrigger">{xen:phrase mark_forums_read}</a></li>
+	</xen:if>
+
+	<xen:comment>THESE ARE EXAMPLES OF HARD-CODED SECONDARY LINKS</xen:comment>
+	<xen:comment>
+	<li><a href="{xen:link 'url1'}">Text1</a></li>
+	<li><a href="{xen:link 'url2'}">Text2</a></li>
+	</xen:comment>
+
+	{xen:raw $childLinks}
+</ul>]]></template>
+    <template title="nat_public_css.css" version_id="102020" version_string="1.2.2"><![CDATA[.natMenuLevel0
+{
+	padding-left: 0px;
+}
+
+.natMenuLevel1
+{
+	padding-left: 10px;
+}
+
+.natMenuLevel2
+{
+	padding-left: 20px;
+}
+
+.natMenuLevel3
+{
+	padding-left: 30px;
+}
+
+.natMenuLevel4
+{
+	padding-left: 40px;
+}
+
+.natMenuLevel5
+{
+	padding-left: 50px;
+}
+
+.natMenuLevel6
+{
+	padding-left: 60px;
+}
+
+.natMenuLevel7
+{
+	padding-left: 70px;
+}
+
+.natMenuLevel8
+{
+	padding-left: 80px;
+}
+
+.natMenuLevel9
+{
+	padding-left: 90px;
+}
+
+.natMenuLevel10
+{
+	padding-left: 100px;
+}
+
+
+
+/* STYLING TO MAKE COLUMN MENUS WORK */
+div.natJSMenuColumns
+{
+	{xen:property secondaryContent.background}
+	background-color: {xen:helper rgba, {xen:property secondaryContent.background-color}, 0.96};
+}
+
+/* STYLING TO MAKE COLUMN MENUS WORK */
+div.natJSMenuColumns ul
+{
+	float: left;
+	border-bottom: 0px;
+	background-color: transparent !important;
+	max-height: none !important;
+}
+
+
+
+<xen:comment>
+	WITH RESPECT TO COLUMN MENUS, MANY PEOPLE DESIRE TO DUPLICATE
+	THE FORUM "JumpMenu" ON https://forums.digitalpoint.com/ .
+	BELOW IS SPECIAL CSS TO MAKE YOUR COLUMN MENUS LOOK
+	EXACTLY LIKE DIGITALPOINT.
+</xen:comment>
+
+<xen:comment>
+/* SLIGHTLY SEPARATE PARENT IN EACH COLUMN FROM LINKS UNDER IT */
+div.natJSMenuColumns .natMenuLevel0
+{
+	padding: 5px 5px;
+}
+
+/* BOLD AND CHANGE COLOR OF PARENT IN EACH COLUMN */
+div.natJSMenuColumns .natMenuLevel0 a
+{
+	font-weight: bold;
+	color: {xen:property primaryDarker};
+}
+
+/* MAKE LINKS CLOSER TOGETHER TO CONSERVE SPACE */
+div.natJSMenuColumns .blockLinksList a
+{
+	padding: 2px 5px;
+}
+
+/* HIDE POPUP HEADER */
+div.natJSMenuColumns .menuHeader
+{
+	display: none;
+}
+</xen:comment>]]></template>
+  </templates>
+  <public_template_modifications/>
+  <bb_code_media_sites/>
+</addon>
